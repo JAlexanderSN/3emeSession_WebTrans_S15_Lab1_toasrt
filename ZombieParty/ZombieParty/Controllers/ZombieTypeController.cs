@@ -61,12 +61,19 @@ namespace ZombieParty.Controllers
                 // Ajouter à la BD
                await  _baseDonnees.ZombieTypes.AddAsync(zombieType);
                 _baseDonnees.SaveChanges();
+                
                 //TempData["Success"] = $"{zombieType.TypeName} zombie type added";
+                
+                // NUEVO SISTEMA DE NOTIFICACIONES GRACIAS A LA BD
 
                 _notyf.Success($"{zombieType.TypeName} zombie type added");
 
+                _notyf.Error("ZOMBIE NO CREADO");
+
                 return this.RedirectToAction("Index");
             }
+
+            
 
             return this.View(zombieType);
         }
