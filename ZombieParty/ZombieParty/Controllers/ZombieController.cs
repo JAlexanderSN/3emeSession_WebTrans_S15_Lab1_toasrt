@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ZombieParty.Models;
@@ -10,10 +11,12 @@ namespace ZombieParty.Controllers
     public class ZombieController : Controller
     {
         private ZombiePartyDbContext _baseDonnees { get; set; }
+        private INotyfService _toast { get; set; }
 
-        public ZombieController(ZombiePartyDbContext baseDonnees)
+        public ZombieController(ZombiePartyDbContext baseDonnees, INotyfService notyf)
         {
             _baseDonnees = baseDonnees;
+            _toast = notyf;
         }
 
         public async Task<IActionResult> Index()
@@ -113,12 +116,14 @@ namespace ZombieParty.Controllers
                 await _baseDonnees.Zombies.AddAsync(zombieVM.Zombie);
                 await _baseDonnees.SaveChangesAsync();
                 TempData["Success"] = $"Zombie {zombieVM.Zombie.Name} added";
+
                 return this.RedirectToAction("Index");
             }
             zombieVM.ZombieTypeSelectList = _baseDonnees.ZombieTypes.Select(t => new SelectListItem
             {
                 Text = t.TypeName,
                 Value = t.Id.ToString()
+            
             }).OrderBy(t => t.Text);
 
             return View(zombieVM);

@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ZombiePartyDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")).UseLazyLoadingProxies());
+builder.Services.AddNotyf(configure =>
+{
+    configure.Position = AspNetCoreHero.ToastNotification.NotyfPosition.TopCenter;
+});
 
 
 var app = builder.Build();
@@ -30,5 +34,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//NOTIFY PEQUENA NOTIFICACION
+
+app.UseNotyf();
+
 
 app.Run();
